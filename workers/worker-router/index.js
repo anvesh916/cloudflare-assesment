@@ -64,7 +64,7 @@ router.put('/posts/:id', async request => {
     }
     const data = await POSTS.get(id, { type: 'json' })
     if (data) {
-        await POSTS.put(id, JSON.stringify({ ...data, payload }))
+        await POSTS.put(id, JSON.stringify({ ...data, ...payload }))
     }
     return getAPIResponse('Updated Sucessfully')
 })
