@@ -7,7 +7,6 @@ const loadPosts = () => {
   return (dispatch) => {
     APIHandler("/posts", { method: "GET" }, dispatch)
       .then((response) => {
-        response.sort((b, a) => a.id - b.id);
         dispatch({ type: PostActionType.LOAD_ALL_POSTS, posts: response });
       })
       .catch((error) => {

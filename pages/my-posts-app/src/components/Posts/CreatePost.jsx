@@ -28,10 +28,7 @@ function CreatePost() {
   });
   const checkFormValidity = () => {
     const checkFields =
-      !!payload["title"] &&
-      !!payload["username"] &&
-      !!payload["content"] &&
-      !!payload["media_link"];
+      !!payload["title"] && !!payload["username"] && !!payload["content"];
     setIsFormValid(checkFields);
   };
   const classes = useStyles();

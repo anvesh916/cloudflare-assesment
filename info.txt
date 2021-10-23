@@ -2,5 +2,5 @@ Git Credentials:
 Username: 1wq83Xnf7raY3OMTaJm3bmpw7G7lrD
 Password: ZXPNN4vT
 
-Workers URL: 
-Pages URL: 
+Workers URL: https://worker-router.anvesh-voona.workers.dev/ 
+Pages URL: https://cloudflare-assesment.pages.dev/

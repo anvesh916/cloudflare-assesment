@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Badge,
@@ -8,15 +8,23 @@ import {
   CardContent,
   CardHeader,
   CardMedia,
+  Collapse,
   IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
   styled,
+  TextField,
   Typography,
 } from "@material-ui/core";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import useStyles from "./Styles";
 import postActions from "./Posts.actions";
 import { Box } from "@mui/system";
-
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import MessageIcon from "@mui/icons-material/Message";
+import DeleteIcon from "@mui/icons-material/Delete";
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     right: -3,
@@ -25,12 +33,37 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     padding: "0 4px",
   },
 }));
+const ExpandMore = styled((props) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
+
 function PostsTemplate({ post }) {
+  const [expanded, setExpanded] = React.useState(false);
+  const [commentText, setCommentText] = useState("");
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
   const classes = useStyles();
   const { deletePost, updatePosts } = postActions();
   const setLike = (post) => {
     updatePosts(post.id, { likes: (post.likes || 0) + 1 });
   };
+  const setComments = (post, comment) => {
+    let allComments = [];
+    if (post.comments) {
+      allComments = [...post.comments];
+    }
+    allComments.push(comment);
+    updatePosts(post.id, { comments: allComments });
+  };
+
   let classNameHolder = ["avatar", "orangeAvatar", "purpleAvatar"];
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -58,30 +91,85 @@ function PostsTemplate({ post }) {
         title={post.title}
         subheader={post.username}
       />
-      <CardMedia
-        style={{ objectFit: "contain" }}
-        component="img"
-        height="300px"
-        image={`https://media.giphy.com/media/${
-          post.media_link ? post.media_link : "sJWNLTclcvVmw"
-        }/giphy.gif`}
-        alt="giphy"
-      />
+      {post.media_link && (
+        <CardMedia
+          style={{ objectFit: "contain" }}
+          component="img"
+          height="300px"
+          image={`https://media.giphy.com/media/${post.media_link}/giphy.gif`}
+          alt="giphy"
+        />
+      )}
       <CardContent>
         <Typography variant="body1">{post.content}</Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <Button color="primary" size="small" onClick={() => {}}>
-          Comment
-        </Button>
         <Button
-          size="small"
+          style={{ textTransform: "none" }}
           color="primary"
-          onClick={() => deletePost(post.id)}
+          variant="outlined"
+          startIcon={<MessageIcon />}
+          onClick={handleExpandClick}
+          disableElevation
         >
-          Delete
+          <Typography>
+            Comment{post.comments ? `s (${post.comments.length})` : ""}
+          </Typography>
         </Button>
+        <Box ml={2}>
+          <Button
+            style={{ textTransform: "none" }}
+            color="secondary"
+            variant="outlined"
+            startIcon={<DeleteIcon />}
+            onClick={() => deletePost(post.id)}
+            disableElevation
+          >
+            <Typography>Delete</Typography>
+          </Button>
+        </Box>
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+        >
+          <ExpandMoreIcon />
+        </ExpandMore>
       </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          {/* {comments.map((c) => (
+            <Typography>{c}</Typography>
+          ))} */}
+          {post.comments && (
+            <List dense={false}>
+              {post.comments.map((c) => (
+                <ListItem>
+                  <ListItemIcon>
+                    <MessageIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={c} />
+                </ListItem>
+              ))}
+            </List>
+          )}
+          <TextField
+            onKeyPress={(ev) => {
+              if (ev.key === "Enter") {
+                setComments(post, ev.target.value);
+                setCommentText("");
+                ev.preventDefault();
+              }
+            }}
+            onChange={({ target }) => setCommentText(target.value)}
+            size="small"
+            fullWidth
+            value={commentText}
+            variant="outlined"
+            placeholder="Write a comment..."
+          />
+        </CardContent>
+      </Collapse>
     </Card>
   );
 }
