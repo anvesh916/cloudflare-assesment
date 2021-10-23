@@ -4,8 +4,8 @@ export const APIHandler = (path, options, dispatch) => {
   dispatch(setBusy({ busy: true }));
   return fetch(API_URL + path, {
     ...options,
+    mode: "cors",
     method: options.method,
-    credentials: "same-origin",
     headers: new Headers({
       "Content-Type": "application/json",
       ...options.headers,
