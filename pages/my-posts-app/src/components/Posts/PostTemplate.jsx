@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardMedia,
   Collapse,
+  Grid,
   IconButton,
   List,
   ListItem,
@@ -25,6 +26,9 @@ import { Box } from "@mui/system";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MessageIcon from "@mui/icons-material/Message";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     right: -3,
@@ -52,8 +56,8 @@ function PostsTemplate({ post }) {
   };
   const classes = useStyles();
   const { deletePost, updatePosts } = postActions();
-  const setLike = (post) => {
-    updatePosts(post.id, { likes: (post.likes || 0) + 1 });
+  const setEmojis = (post, data) => {
+    updatePosts(post.id, data);
   };
   const setComments = (post, comment) => {
     let allComments = [];
@@ -80,13 +84,44 @@ function PostsTemplate({ post }) {
           </Avatar>
         }
         action={
-          <Box pr={1}>
-            <IconButton onClick={() => setLike(post)} aria-label="cart">
-              <StyledBadge badgeContent={post.likes || 0} color="secondary">
-                <FavoriteIcon color="action" />
-              </StyledBadge>
-            </IconButton>
-          </Box>
+          <Grid container>
+            <Box pr={1}>
+              <IconButton
+                onClick={() =>
+                  setEmojis(post, { likes: (post.likes || 0) + 1 })
+                }
+              >
+                <StyledBadge badgeContent={post.likes || 0} color="secondary">
+                  <FavoriteIcon color="action" />
+                </StyledBadge>
+              </IconButton>
+            </Box>
+            <Box pr={1}>
+              <IconButton
+                onClick={() =>
+                  setEmojis(post, { downvote: (post.downvote || 0) + 1 })
+                }
+              >
+                <StyledBadge
+                  badgeContent={post.downvote || 0}
+                  color="secondary"
+                >
+                  <ThumbDownIcon color="action" />
+                </StyledBadge>
+              </IconButton>
+            </Box>
+            <Box pr={1}>
+              <IconButton
+                onClick={() =>
+                  setEmojis(post, { upvote: (post.upvote || 0) + 1 })
+                }
+              >
+                <StyledBadge badgeContent={post.upvote || 0} color="secondary">
+                  <ThumbUpIcon color="action" />
+                </StyledBadge>
+              </IconButton>
+            </Box>
+          </Grid>
         }
         title={post.title}
         subheader={post.username}
@@ -125,7 +160,7 @@ function PostsTemplate({ post }) {
             onClick={() => deletePost(post.id)}
             disableElevation
           >
-            <Typography>Delete</Typography>
+            <Typography>Remove</Typography>
           </Button>
         </Box>
         <ExpandMore
@@ -145,8 +180,8 @@ function PostsTemplate({ post }) {
             <List dense={false}>
               {post.comments.map((c) => (
                 <ListItem>
-                  <ListItemIcon>
-                    <MessageIcon />
+                  <ListItemIcon color="primary">
+                    <MessageIcon color="primary" />
                   </ListItemIcon>
                   <ListItemText primary={c} />
                 </ListItem>
