@@ -1,0 +1,12 @@
+name = "worker-router"
+type = "webpack"
+webpack_config = "webpack.config.js"
+
+account_id = "fd53bbe210a5359bb354c89dade65cd7"
+workers_dev = true
+route = ""
+zone_id = ""
+compatibility_date = "2021-10-22"
+kv_namespaces = [
+         { binding = "POSTS", id = "4642ea805400474cb9c9b5443bc621e5" }
+]
