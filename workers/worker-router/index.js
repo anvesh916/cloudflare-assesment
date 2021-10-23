@@ -35,7 +35,9 @@ router.get('/posts', async () => {
             const payload = await POSTS.get(data.keys[index].name, {
                 type: 'json',
             })
-            response.push({ ...payload, id: data.keys[index].name })
+            if (payload) {
+                response.push({ ...payload, id: data.keys[index].name })
+            }
         }
     }
     return getAPIResponse(JSON.stringify(response))
