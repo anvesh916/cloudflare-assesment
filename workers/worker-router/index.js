@@ -46,13 +46,23 @@ router.get('/posts', async () => {
 router.get('/posts/:id', async ({ params }) => {
     const { id } = params
     const data = await POSTS.get(id)
+    if (!data) {
+        return getErrorResponse({
+            message: `No data available for the ID: ${id}`,
+        })
+    }
     return getAPIResponse(data)
 })
 
 router.post('/posts', async request => {
-    let payload = {}
+    let payload = ''
     if (request.headers.get('Content-Type') === 'application/json') {
         payload = await request.json()
+    }
+    if (!payload) {
+        return getErrorResponse({
+            message: `Post cannot be empty, pass username, content, title to create a post`,
+        })
     }
     await POSTS.put(uuidv4(), JSON.stringify(payload))
     return getAPIResponse(JSON.stringify(payload))
@@ -65,9 +75,12 @@ router.put('/posts/:id', async request => {
         payload = await request.json()
     }
     const data = await POSTS.get(id, { type: 'json' })
-    if (data) {
-        await POSTS.put(id, JSON.stringify({ ...data, ...payload }))
+    if (!data) {
+        return getErrorResponse({
+            message: `No data available for the ID: ${id}`,
+        })
     }
+    await POSTS.put(id, JSON.stringify({ ...data, ...payload }))
     return getAPIResponse('Updated Sucessfully')
 })
 
@@ -102,7 +115,7 @@ const handleOptions = request => {
         // If you want to allow other HTTP Methods, you can do that here.
         return new Response(null, {
             headers: {
-                Allow: 'GET, HEAD, POST, OPTIONS, PUT',
+                Allow: 'GET,HEAD,POST,PUT,DELETE,OPTIONS',
             },
         })
     }
