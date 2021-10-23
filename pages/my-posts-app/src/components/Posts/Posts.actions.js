@@ -4,7 +4,6 @@ import { setToastMessage } from "../App/App.actions";
 import { PostActionType } from "./constants";
 
 const loadPosts = () => {
-  console.log("Loading posts");
   return (dispatch) => {
     APIHandler("/posts", { method: "GET" }, dispatch)
       .then((response) => {
@@ -24,7 +23,7 @@ const updatePosts = (id, payload) => {
       { method: "PUT", body: JSON.stringify(payload) },
       dispatch
     )
-      .then(() => {
+      .finally(() => {
         dispatch(loadPosts());
       })
       .catch((error) => {
@@ -43,10 +42,12 @@ const deletePost = (id) => {
             type: "success",
           })
         );
-        dispatch(loadPosts());
       })
       .catch((error) => {
         //Handle Error
+      })
+      .finally(() => {
+        dispatch(loadPosts());
       });
   };
 };
@@ -65,10 +66,12 @@ const createPost = (payload) => {
             type: "success",
           })
         );
-        dispatch(loadPosts());
       })
       .catch((error) => {
         //Handle Error
+      })
+      .finally(() => {
+        dispatch(loadPosts());
       });
   };
 };

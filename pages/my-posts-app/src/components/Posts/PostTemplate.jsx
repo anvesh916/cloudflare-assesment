@@ -36,9 +36,9 @@ function PostsTemplate({ post }) {
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <CardHeader
         avatar={
-          <Avatar className={classes[classNameHolder[post.id % 3]]}>
+          <Avatar className={classes[classNameHolder[0]]}>
             {post.username
-              ? post.username[0]
+              ? post.username
                   .split(" ")
                   .map((n) => n[0])
                   .join("")
