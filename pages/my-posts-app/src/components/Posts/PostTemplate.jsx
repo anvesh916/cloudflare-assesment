@@ -7,6 +7,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  CardMedia,
   IconButton,
   styled,
   Typography,
@@ -36,7 +37,13 @@ function PostsTemplate({ post }) {
       <CardHeader
         avatar={
           <Avatar className={classes[classNameHolder[post.id % 3]]}>
-            {post.username[0].toUpperCase()}
+            {post.username
+              ? post.username[0]
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()
+              : ""}
           </Avatar>
         }
         action={
@@ -50,6 +57,15 @@ function PostsTemplate({ post }) {
         }
         title={post.title}
         subheader={post.username}
+      />
+      <CardMedia
+        style={{ objectFit: "contain" }}
+        component="img"
+        height="300px"
+        image={`https://media.giphy.com/media/${
+          post.media_link ? post.media_link : "sJWNLTclcvVmw"
+        }/giphy.gif`}
+        alt="giphy"
       />
       <CardContent>
         <Typography variant="body1">{post.content}</Typography>

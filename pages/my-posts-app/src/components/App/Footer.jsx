@@ -5,7 +5,11 @@ import { Copyright } from "@material-ui/icons";
 
 const Footer = () => {
   return (
-    <Box sx={{ bgcolor: "background.paper", p: 6 }} component="footer">
+    <Box
+      style={{ color: "white" }}
+      sx={{ bgcolor: "background.paper", p: 6 }}
+      component="footer"
+    >
       <Typography variant="h6" align="center" gutterBottom>
         Anvesh Kumar Voona
       </Typography>

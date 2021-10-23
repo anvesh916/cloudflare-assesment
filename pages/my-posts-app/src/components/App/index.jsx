@@ -15,15 +15,14 @@ function App({ children }) {
   const { removeToastMessage } = appActions();
 
   return (
-    <>
+    <Box>
       <CssBaseline />
-      <Header />
-      <main>
+      <Header>
         <Box height="1px">
           <LoadingView currentlySending={busy} />
         </Box>
-        {children}
-      </main>
+      </Header>
+      <main>{children}</main>
       <Footer />
       {message && (
         <SimpleSnackbar
@@ -32,7 +31,7 @@ function App({ children }) {
           type={type}
         />
       )}
-    </>
+    </Box>
   );
 }
 

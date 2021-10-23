@@ -1,0 +1,18 @@
+.searchboxWrapper {
+  border-radius: 0.3rem;
+  display: inline-block;
+  padding: 15px;
+  box-shadow: 0 0.3rem 1rem rgba(8, 38, 78, 0.2);
+}
+.reactGiphySearchbox-listWrapper {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.reactGiphySearchbox-searchForm-input {
+  font-size: 20px !important;
+  background: 0;
+  border: 0;
+  width: 400px;
+  transition: padding 0.3s 0.2s ease;
+}

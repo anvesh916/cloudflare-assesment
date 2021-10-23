@@ -14,7 +14,7 @@ const LoadingView = ({ currentlySending, fallbackDelay = 500 }) => {
     return () => clearTimeout(timeout);
   }, [currentlySending, fallbackDelay]);
 
-  return delayed ? <LinearProgress /> : null;
+  return delayed ? <LinearProgress color="primary" /> : null;
 };
 
 LoadingView.propTypes = {
