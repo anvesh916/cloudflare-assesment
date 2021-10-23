@@ -15,7 +15,7 @@ function App({ children }) {
   const { removeToastMessage } = appActions();
 
   return (
-    <Box>
+    <Box style={{ backgroundColor: "#f9f9f9" }}>
       <CssBaseline />
       <Header>
         <Box height="1px">

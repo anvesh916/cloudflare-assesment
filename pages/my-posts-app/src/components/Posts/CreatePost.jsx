@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  Chip,
   Container,
   Grid,
+  Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -21,6 +23,7 @@ function CreatePost() {
     Object.fromEntries(textfields.map((each) => [[each], true]))
   );
   const [isFormValid, setIsFormValid] = useState(true);
+  const [gifTitle, setGifTitle] = useState();
   useEffect(() => {
     checkFormValidity();
   });
@@ -47,7 +50,6 @@ function CreatePost() {
   };
   return (
     <Box
-      style={{ backgroundColor: "transparent" }}
       sx={{
         pt: 4,
         pb: 6,
@@ -83,13 +85,20 @@ function CreatePost() {
           </Box>
         ))}
         <Grid justifyContent="center" container>
+          {gifTitle && (
+            <Chip label={gifTitle} variant="contained" color="primary" />
+          )}
+
           <div className="searchboxWrapper">
             <ReactGiphySearchbox
               apiKey="9Ixlv3DWC1biJRI57RanyL7RTbfzz0o7"
-              onSelect={(item) => handleChange({ media_link: item.id })}
+              onSelect={(item) => {
+                setGifTitle(item.title);
+                handleChange({ media_link: item.id });
+              }}
               masonryConfig={[
-                { columns: 2, imageWidth: 160, gutter: 5 },
-                { mq: "700px", columns: 3, imageWidth: 160, gutter: 5 },
+                { columns: 2, imageWidth: 150, gutter: 5 },
+                { mq: "700px", columns: 3, imageWidth: 150, gutter: 5 },
               ]}
             />
           </div>

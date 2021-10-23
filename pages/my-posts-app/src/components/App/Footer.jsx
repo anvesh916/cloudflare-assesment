@@ -29,9 +29,7 @@ const Footer = () => {
         </Grid>
         <Grid item>
           <Box height={30}>
-            <Typography>
-              https://remedies-breed-reservoir-click.trycloudflare.com
-            </Typography>
+            <Typography>2020</Typography>
           </Box>
         </Grid>
       </Grid>
