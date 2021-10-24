@@ -90,7 +90,10 @@ router.delete('/posts/:id', async ({ params }) => {
     return getAPIResponse('Deleted Sucessfully')
 })
 
-router.all('*', () => new Response('Request not found', { status: 404 }))
+router.all('*', request => {
+    const url = new URL(request.url)
+    return Response.redirect(url + '/posts', 301)
+})
 
 const handleOptions = request => {
     let headers = request.headers

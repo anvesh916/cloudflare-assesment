@@ -8,5 +8,5 @@ route = ""
 zone_id = ""
 compatibility_date = "2021-10-22"
 kv_namespaces = [
-         { binding = "POSTS", id = "4642ea805400474cb9c9b5443bc621e5" }
+          { binding = "POSTS", id = "4642ea805400474cb9c9b5443bc621e5" }
 ]
