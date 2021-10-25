@@ -2,6 +2,8 @@ import { Router } from 'itty-router'
 import { v4 as uuidv4 } from 'uuid'
 const router = Router()
 
+const authService = 'https://civic-fool-put-heights.trycloudflare.com'
+
 const getErrorResponse = error =>
     new Response(JSON.stringify(error), {
         headers: {
@@ -51,6 +53,7 @@ router.get('/posts/:id', async ({ params }) => {
             message: `No data available for the ID: ${id}`,
         })
     }
+
     return getAPIResponse(data)
 })
 
@@ -64,8 +67,42 @@ router.post('/posts', async request => {
             message: `Post cannot be empty, pass username, content, title to create a post`,
         })
     }
-    await POSTS.put(uuidv4(), JSON.stringify(payload))
-    return getAPIResponse(JSON.stringify(payload))
+    const response = getAPIResponse(JSON.stringify(payload))
+    const authHeader = request.headers.get('Cookie')
+    let UserToken = authHeader && authHeader.split('=')[1]
+    let token = ''
+    if (!UserToken) {
+        token = await fetch(
+            `${authService}/auth/${payload.username}`
+        ).then(response => response.text())
+        await POSTS.put(uuidv4(), JSON.stringify(payload))
+        console.log('New User posted')
+    } else {
+        try {
+            const username = await fetch(`${authService}/verify`, {
+                headers: { Cookie: `token=${UserToken}` },
+            }).then(response => response.text())
+            if (username != payload.username) {
+                console.log('Invalid User')
+                throw Error('Invalid User')
+            }
+            token = UserToken
+            console.log('User Verified')
+            await POSTS.put(uuidv4(), JSON.stringify(payload))
+        } catch (e) {
+            return getErrorResponse({
+                message: 'Invalid user',
+            })
+        }
+    }
+    const date = new Date()
+    date.setHours(date.getHours() + 24)
+    response.headers.set(
+        'Set-Cookie',
+        `token=${token}; Path=/posts; Expires=${date.toUTCString()};`
+    )
+
+    return response
 })
 
 router.put('/posts/:id', async request => {
