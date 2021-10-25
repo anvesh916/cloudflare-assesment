@@ -51,13 +51,18 @@ func Authorize(w http.ResponseWriter, s *http.Request) {
 }
 
 func Verify(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
 	c, err := r.Cookie("token")
-	if err != nil {
+	fmt.Println("Verifying the token")
+	fmt.Println(c)
+	if c == nil || err != nil {
 		if err == http.ErrNoCookie {
 			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte("No Cookie available"))
 			return
 		}
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Bad Request"))
 		return
 	}
 	signBytes, _ := ioutil.ReadFile("./public.key.pub")
@@ -69,22 +74,32 @@ func Verify(w http.ResponseWriter, r *http.Request) {
 		return jwtKey, nil
 	})
 	if err != nil {
-		log.Println("Unable to verify", err)
-	}
-	if err != nil {
+		// tkn, err := jwt.Parse(tknStr, func(token *jwt.Token) (interface{}, error) {
+		// 	return jwtKey, nil
+		// })
+		// if tkn != nil {
+		// 	w.WriteHeader(http.StatusUnauthorized)
+		// 	w.Write([]byte("Unauthorized"))
+		// 	// w.Write([]byte("blah"))
+		// 	return
+		// }
 		log.Println("Unable to verify", err)
 		if err == jwt.ErrSignatureInvalid {
 			w.WriteHeader(http.StatusUnauthorized)
+			w.Write([]byte("Unauthorized"))
 			return
 		}
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Bad Request"))
+
 		return
 	}
 	if !tkn.Valid {
 		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte("Unauthorized"))
+
 		return
 	}
-	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte(claims.Sub))
 }
 
@@ -99,7 +114,7 @@ func Readme(w http.ResponseWriter, r *http.Request) {
 }
 
 func Stats(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Content-Type", "text/plain")
 	w.Write([]byte("No Stats available"))
 
 }
